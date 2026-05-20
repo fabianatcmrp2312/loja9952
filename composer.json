@@ -1,0 +1,17 @@
+{
+    "name": "turma/loja9952",
+    "authors": [
+        {
+            "name": "Fabiana Nolasco",
+            "email": "fabianatcmrp@gmail.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {},
+           "autoload": {
+        "psr-4": {
+            "App\\": "src/"
+        }
+    }
+
+}
