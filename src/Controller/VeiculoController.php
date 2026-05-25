@@ -27,7 +27,7 @@ class VeiculoController
 
         $veiculos = $this->model->listar($filtros);
         $marcas = $this->model->getMarcas();
-        $titulo = 'Catálogo de Veículos';
+        $titulo = 'Catalogo de Veiculos';
 
         require __DIR__ . '/../../templates/veiculos/catalogo.php';
     }
@@ -38,14 +38,14 @@ class VeiculoController
 
         if (!$veiculo) {
             http_response_code(404);
-            echo 'Veículo não encontrado.';
+            echo 'Veiculo nao encontrado.';
             return;
         }
 
-        $baseUrl = rtrim(dirname($_SERVER['SCRIPT_NAME']), '/');
+        $baseUrl = rtrim(dirname($_SERVER['SCRIPT_NAME'] ?? ''), '/');
 
         echo '<h1>' . htmlspecialchars($veiculo['marca'] . ' ' . $veiculo['modelo']) . '</h1>';
-        echo '<p>Preço: ' . number_format((float) $veiculo['preco'], 2, ',', '.') . ' EUR</p>';
+        echo '<p>Preco: ' . number_format((float) $veiculo['preco'], 2, ',', '.') . ' EUR</p>';
         echo '<p><a href="' . htmlspecialchars($baseUrl . '/') . '">Voltar</a></p>';
     }
 }

@@ -1,5 +1,5 @@
 <?php
-$baseUrl = rtrim(dirname($_SERVER['SCRIPT_NAME']), '/');
+$baseUrl = rtrim(dirname($_SERVER['SCRIPT_NAME'] ?? ''), '/');
 $projectUrl = preg_replace('#/public$#', '', $baseUrl);
 ?>
 <!DOCTYPE html>
@@ -24,7 +24,7 @@ $projectUrl = preg_replace('#/public$#', '', $baseUrl);
     </style>
 </head>
 <body>
-    <h1>AutoShop - Catálogo de Veículos</h1>
+    <h1>AutoShop - Catalogo de Veiculos</h1>
 
     <form class="filtros" method="GET" action="">
         <select name="marca_id">
@@ -37,14 +37,14 @@ $projectUrl = preg_replace('#/public$#', '', $baseUrl);
             <?php endforeach ?>
         </select>
         <select name="combustivel">
-            <option value="">Combustível</option>
-            <?php foreach (['Gasolina', 'Diesel', 'Elétrico', 'Híbrido'] as $c): ?>
+            <option value="">Combustivel</option>
+            <?php foreach (['Gasolina', 'Diesel', 'Eletrico', 'Hibrido'] as $c): ?>
             <option <?= (($_GET['combustivel'] ?? '') === $c) ? 'selected' : '' ?>><?= htmlspecialchars($c) ?></option>
             <?php endforeach ?>
         </select>
-        <input type="number" name="preco_max" placeholder="Preço máx. (EUR)"
+        <input type="number" name="preco_max" placeholder="Preco max. (EUR)"
                value="<?= htmlspecialchars($_GET['preco_max'] ?? '') ?>">
-        <input type="number" name="ano_min" placeholder="Ano mínimo"
+        <input type="number" name="ano_min" placeholder="Ano minimo"
                value="<?= htmlspecialchars($_GET['ano_min'] ?? '') ?>">
         <input type="text" name="pesquisa" placeholder="Pesquisar modelo..."
                value="<?= htmlspecialchars($_GET['pesquisa'] ?? '') ?>">
@@ -52,10 +52,10 @@ $projectUrl = preg_replace('#/public$#', '', $baseUrl);
         <a href="<?= htmlspecialchars($baseUrl . '/') ?>" style="padding:8px 14px;color:#555;text-decoration:none;">Limpar</a>
     </form>
 
-    <p><?= count($veiculos) ?> veículo(s) encontrado(s)</p>
+    <p><?= count($veiculos) ?> veiculo(s) encontrado(s)</p>
 
     <?php if (empty($veiculos)): ?>
-        <p style="color:#888;">Nenhum veículo corresponde aos filtros selecionados.</p>
+        <p style="color:#888;">Nenhum veiculo corresponde aos filtros selecionados.</p>
     <?php else: ?>
     <div class="grelha">
     <?php foreach ($veiculos as $v): ?>
