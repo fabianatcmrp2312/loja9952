@@ -2,6 +2,29 @@
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+function csrf_token(): string
+{
+    if (empty($_SESSION['csrf_token'])) {
+        $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+    }
+
+    return $_SESSION['csrf_token'];
+}
+
+function csrf_validar(): void
+{
+    $token = $_POST['csrf_token'] ?? '';
+
+    if (!hash_equals($_SESSION['csrf_token'] ?? '', $token)) {
+        http_response_code(403);
+        exit('Token CSRF invalido.');
+    }
+}
+
 if (is_file(__DIR__ . '/../.env')) {
     $env = parse_ini_file(__DIR__ . '/../.env');
     foreach ($env ?: [] as $k => $v) {
@@ -10,6 +33,7 @@ if (is_file(__DIR__ . '/../.env')) {
 }
 
 use App\Controller\VeiculoController;
+use App\Controller\CarrinhoController;
 
 $basePath = trim(dirname($_SERVER['SCRIPT_NAME'] ?? '/'), '/');
 $uri      = trim(parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH), '/');
@@ -23,10 +47,11 @@ $recurso = $partes[0] ?? '';
 $acao    = $partes[1] ?? '';
 $id      = (int) ($partes[2] ?? 0);
 
-$ctrl = new VeiculoController();
-
 match ("$recurso/$acao") {
-    '/' => $ctrl->catalogo(),
-    'veiculo/detalhe' => $ctrl->detalhe($id),
-    default => $ctrl->catalogo(),
+    '/' => (new VeiculoController())->catalogo(),
+    'veiculo/detalhe' => (new VeiculoController())->detalhe($id),
+    'carrinho/' => (new CarrinhoController())->ver(),
+    'carrinho/adicionar' => (new CarrinhoController())->adicionar(),
+    'carrinho/remover' => (new CarrinhoController())->remover(),
+    default => (new VeiculoController())->catalogo(),
 };

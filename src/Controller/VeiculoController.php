@@ -34,6 +34,12 @@ class VeiculoController
 
     public function detalhe(int $id): void
     {
+        if ($id <= 0) {
+            $baseUrl = rtrim(dirname($_SERVER['SCRIPT_NAME'] ?? ''), '/');
+            header('Location: ' . $baseUrl . '/');
+            exit;
+        }
+
         $veiculo = $this->model->getById($id);
 
         if (!$veiculo) {
@@ -42,10 +48,8 @@ class VeiculoController
             return;
         }
 
-        $baseUrl = rtrim(dirname($_SERVER['SCRIPT_NAME'] ?? ''), '/');
+        $titulo = $veiculo['marca'] . ' ' . $veiculo['modelo'];
 
-        echo '<h1>' . htmlspecialchars($veiculo['marca'] . ' ' . $veiculo['modelo']) . '</h1>';
-        echo '<p>Preco: ' . number_format((float) $veiculo['preco'], 2, ',', '.') . ' EUR</p>';
-        echo '<p><a href="' . htmlspecialchars($baseUrl . '/') . '">Voltar</a></p>';
+        require __DIR__ . '/../../templates/veiculos/detalhe.php';
     }
 }

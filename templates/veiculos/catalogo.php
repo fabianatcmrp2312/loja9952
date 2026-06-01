@@ -19,11 +19,16 @@ $projectUrl = preg_replace('#/public$#', '', $baseUrl);
         .card-body { padding:14px; }
         .card-body h3 { margin:0 0 6px; font-size:1rem; color:#1A237E; }
         .preco { font-size:1.3rem; font-weight:bold; color:#1565C0; }
-        .detalhe { display:inline-block; margin-top:10px; background:#1565C0; color:#fff;
-                   padding:7px 14px; border-radius:4px; text-decoration:none; font-size:.9rem; }
+        .acoes { display:flex; gap:8px; align-items:center; margin-top:10px; }
+        .acoes form { margin:0; }
+        .detalhe, .adicionar { display:inline-block; background:#1565C0; color:#fff;
+                   padding:7px 14px; border:0; border-radius:4px; text-decoration:none; font-size:.9rem; cursor:pointer; }
+        .adicionar { background:#2E7D32; }
     </style>
 </head>
 <body>
+    <?php require __DIR__ . '/../header.php'; ?>
+
     <h1>AutoShop - Catalogo de Veiculos</h1>
 
     <form class="filtros" method="GET" action="">
@@ -66,7 +71,14 @@ $projectUrl = preg_replace('#/public$#', '', $baseUrl);
                 <h3><?= htmlspecialchars($v['marca'] . ' ' . $v['modelo']) ?></h3>
                 <p><?= htmlspecialchars($v['ano']) ?> - <?= number_format((float) $v['quilometros'], 0, '.', '.') ?> km - <?= htmlspecialchars($v['combustivel']) ?></p>
                 <div class="preco"><?= number_format((float) $v['preco'], 2, ',', '.') ?> EUR</div>
-                <a class="detalhe" href="<?= htmlspecialchars($baseUrl . '/veiculo/detalhe/' . $v['id']) ?>">Ver detalhe</a>
+                <div class="acoes">
+                    <a class="detalhe" href="<?= htmlspecialchars($baseUrl . '/veiculo/detalhe/' . $v['id']) ?>">Ver detalhe</a>
+                    <form method="POST" action="<?= htmlspecialchars($baseUrl . '/carrinho/adicionar') ?>">
+                        <input type="hidden" name="veiculo_id" value="<?= htmlspecialchars($v['id']) ?>">
+                        <input type="hidden" name="csrf_token" value="<?= csrf_token() ?>">
+                        <button class="adicionar" type="submit">Adicionar</button>
+                    </form>
+                </div>
             </div>
         </div>
     <?php endforeach ?>
