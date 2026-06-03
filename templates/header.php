@@ -12,5 +12,6 @@ $total_carrinho = count($_SESSION['carrinho'] ?? []);
         <a href="<?= htmlspecialchars($baseUrl . '/') ?>" style="color:#fff;text-decoration:none;">Catalogo</a>
         <a href="<?= htmlspecialchars($baseUrl . '/carrinho') ?>" style="color:#fff;text-decoration:none;">Lista (<?= $total_carrinho ?>)</a>
         <a href="<?= htmlspecialchars($baseUrl . '/login') ?>" style="color:#fff;text-decoration:none;">Entrar</a>
+        <a href="<?= htmlspecialchars($baseUrl . '/logout') ?>" style="color:#fff;text-decoration:none;">Sair</a>
     </nav>
 </header>

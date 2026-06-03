@@ -34,6 +34,8 @@ if (is_file(__DIR__ . '/../.env')) {
 
 use App\Controller\VeiculoController;
 use App\Controller\CarrinhoController;
+use App\Controller\AuthController;
+use App\Controller\ContaController;
 
 $basePath = trim(dirname($_SERVER['SCRIPT_NAME'] ?? '/'), '/');
 $uri      = trim(parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH), '/');
@@ -53,5 +55,9 @@ match ("$recurso/$acao") {
     'carrinho/' => (new CarrinhoController())->ver(),
     'carrinho/adicionar' => (new CarrinhoController())->adicionar(),
     'carrinho/remover' => (new CarrinhoController())->remover(),
+    'login/' => (new AuthController())->login(),
+    'registar/' => (new AuthController())->registar(),
+    'logout/' => (new AuthController())->logout(),
+    'conta/' => (new ContaController())->ver(),
     default => (new VeiculoController())->catalogo(),
 };
