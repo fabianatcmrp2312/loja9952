@@ -55,7 +55,9 @@ class AuthController {
                 $_SESSION['logado']      = true;
                 $_SESSION['cliente_id']  = $cliente['id'];
                 $_SESSION['cliente_nome']= $cliente['nome'];
-                header('Location: ' . $this->baseUrl() . '/');
+                $redirect = $_SESSION['redirect_after_login'] ?? ($this->baseUrl() . '/');
+                unset($_SESSION['redirect_after_login']);
+                header('Location: ' . $redirect);
                 exit;
             }
             $erro = 'Email ou password incorretos.';

@@ -36,6 +36,7 @@ use App\Controller\VeiculoController;
 use App\Controller\CarrinhoController;
 use App\Controller\AuthController;
 use App\Controller\ContaController;
+use App\Controller\CheckoutController;
 
 $basePath = trim(dirname($_SERVER['SCRIPT_NAME'] ?? '/'), '/');
 $uri      = trim(parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH), '/');
@@ -55,6 +56,8 @@ match ("$recurso/$acao") {
     'carrinho/' => (new CarrinhoController())->ver(),
     'carrinho/adicionar' => (new CarrinhoController())->adicionar(),
     'carrinho/remover' => (new CarrinhoController())->remover(),
+    'checkout/' => (new CheckoutController())->ver(),
+    'checkout/confirmar' => (new CheckoutController())->confirmar(),
     'login/' => (new AuthController())->login(),
     'registar/' => (new AuthController())->registar(),
     'logout/' => (new AuthController())->logout(),

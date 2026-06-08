@@ -15,7 +15,7 @@ class VeiculoModel {
     public function listar(array $filtros = []): array {
         $sql    = 'SELECT v.*, m.nome AS marca FROM veiculos v
                    JOIN marcas m ON m.id = v.marca_id
-                   WHERE v.disponivel = 1';
+                   WHERE 1 = 1';
         $params = [];
  
         if (!empty($filtros['marca_id'])) {

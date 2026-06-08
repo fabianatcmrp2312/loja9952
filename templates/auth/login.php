@@ -7,15 +7,16 @@ $baseUrl = rtrim(dirname($_SERVER['SCRIPT_NAME'] ?? ''), '/');
     <meta charset="UTF-8">
     <title><?= htmlspecialchars($titulo ?? 'Iniciar sessao') ?> - AutoShop</title>
     <style>
-        body { font-family: Arial, sans-serif; max-width: 900px; margin: 0 auto; padding: 20px; color: #222; }
-        .auth { max-width: 420px; }
+        body { font-family: Arial, sans-serif; max-width: 900px; margin: 0 auto; padding: 20px; color: #f5f5f5; background:#111; }
+        .auth { max-width: 420px; background:#1a1a1a; border:1px solid #333; border-radius:12px; padding:22px; }
+        h1 { color:#ffd21f; }
         .campo { margin-bottom: 14px; }
         label { display: block; margin-bottom: 6px; font-weight: bold; }
-        input { width: 100%; box-sizing: border-box; padding: 9px; border: 1px solid #ccc; border-radius: 4px; }
-        button { background: #1565C0; color: #fff; border: 0; border-radius: 4px; padding: 10px 16px; cursor: pointer; }
-        .erro { color: #b71c1c; margin-bottom: 16px; }
-        .mensagem { color: #1b5e20; margin-bottom: 16px; }
-        a { color: #1565C0; }
+        input { width: 100%; box-sizing: border-box; padding: 10px; border: 1px solid #3a3a3a; border-radius: 8px; background:#0f0f0f; color:#f5f5f5; }
+        button { background: #ffd21f; color: #111; border: 0; border-radius: 8px; padding: 10px 16px; cursor: pointer; font-weight:bold; }
+        .erro { color: #ff8a80; margin-bottom: 16px; }
+        .mensagem { color: #b7f397; margin-bottom: 16px; }
+        a { color: #ffd21f; }
     </style>
 </head>
 <body>

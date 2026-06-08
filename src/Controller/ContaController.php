@@ -1,15 +1,19 @@
 <?php
 namespace App\Controller;
- 
+
 use App\Auth;
 use App\Model\ClienteModel;
-use App\Model\ReservaModel; // a criar na FT05
- 
+use App\Model\ReservaModel;
+
 class ContaController {
     public function ver(): void {
-        Auth::verificar(); // redireciona para /login se não autenticado
-        $cliente  = (new ClienteModel())->getById($_SESSION['cliente_id']);
-        $titulo   = 'A minha conta';
-        require '../templates/conta/ver.php';
+        Auth::verificar();
+
+        $cliente = (new ClienteModel())->getById((int) $_SESSION['cliente_id']);
+        $reservas = (new ReservaModel())->getByCliente((int) $_SESSION['cliente_id']);
+        $titulo = 'A minha conta';
+
+        require __DIR__ . '/../../templates/conta/ver.php';
+   
     }
 }

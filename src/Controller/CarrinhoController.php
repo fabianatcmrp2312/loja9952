@@ -34,6 +34,13 @@ class CarrinhoController
         $id = (int) ($_POST['veiculo_id'] ?? 0);
 
         if ($id > 0) {
+            $veiculo = $this->model->getById($id);
+
+            if (!$veiculo || (int) ($veiculo['disponivel'] ?? 0) !== 1) {
+                $_SESSION['msg_info'] = 'Este veiculo ja foi vendido ou nao esta disponivel.';
+                $this->redirectCarrinho();
+            }
+
             $carrinho = $_SESSION['carrinho'] ?? [];
 
             if (!in_array($id, $carrinho, true)) {

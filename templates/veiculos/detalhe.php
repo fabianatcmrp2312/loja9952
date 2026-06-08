@@ -1,6 +1,10 @@
 <?php
 $baseUrl = rtrim(dirname($_SERVER['SCRIPT_NAME'] ?? ''), '/');
 $projectUrl = preg_replace('#/public$#', '', $baseUrl);
+$imagem = $veiculo['imagem'] ?? '';
+$imagemSrc = $imagem !== ''
+    ? (filter_var($imagem, FILTER_VALIDATE_URL) ? $imagem : $projectUrl . '/uploads/' . $imagem)
+    : $baseUrl . '/img/placeholder.png';
 ?>
 <!DOCTYPE html>
 <html lang="pt">
@@ -8,11 +12,14 @@ $projectUrl = preg_replace('#/public$#', '', $baseUrl);
     <meta charset="UTF-8">
     <title><?= htmlspecialchars($titulo) ?> - AutoShop</title>
     <style>
-        body { font-family: Arial, sans-serif; max-width: 900px; margin: 0 auto; padding: 20px; color: #222; }
-        img { max-width: 100%; border-radius: 8px; background: #eee; }
+        body { font-family: Arial, sans-serif; max-width: 900px; margin: 0 auto; padding: 20px; color: #f5f5f5; background:#111; }
+        a { color:#ffd21f; }
+        h1, h2 { color:#ffd21f; }
+        img { max-width: 100%; border-radius: 18px; background: #222; box-shadow:0 12px 30px rgba(0,0,0,.4); }
         table { border-collapse: collapse; margin: 20px 0; width: 100%; }
-        th, td { border-bottom: 1px solid #ddd; padding: 10px; text-align: left; }
-        button { background: #1565C0; color: #fff; border: 0; border-radius: 4px; padding: 10px 16px; cursor: pointer; }
+        th, td { border-bottom: 1px solid #333; padding: 10px; text-align: left; }
+        th { color:#ffd21f; }
+        button { background: #ffd21f; color: #111; border: 0; border-radius: 8px; padding: 10px 16px; cursor: pointer; font-weight:bold; }
     </style>
 </head>
 <body>
@@ -21,7 +28,7 @@ $projectUrl = preg_replace('#/public$#', '', $baseUrl);
     <a href="<?= htmlspecialchars($baseUrl . '/') ?>">Voltar ao catalogo</a>
     <h1><?= htmlspecialchars($veiculo['marca'] . ' ' . $veiculo['modelo']) ?></h1>
 
-    <img src="<?= !empty($veiculo['imagem']) ? htmlspecialchars($projectUrl . '/uploads/' . $veiculo['imagem']) : htmlspecialchars($baseUrl . '/img/placeholder.png') ?>"
+    <img src="<?= htmlspecialchars($imagemSrc) ?>"
          alt="<?= htmlspecialchars($veiculo['marca'] . ' ' . $veiculo['modelo']) ?>">
 
     <table>
@@ -34,6 +41,7 @@ $projectUrl = preg_replace('#/public$#', '', $baseUrl);
         <tr><th>Cilindrada</th><td><?= htmlspecialchars($veiculo['cilindrada']) ?></td></tr>
         <?php endif ?>
         <tr><th>Preco</th><td><strong><?= number_format((float) $veiculo['preco'], 2, ',', '.') ?> EUR</strong></td></tr>
+        <tr><th>Estado</th><td><strong><?= ((int) ($veiculo['disponivel'] ?? 0) === 1) ? 'Disponivel' : 'Reservado' ?></strong></td></tr>
     </table>
 
     <?php if (!empty($veiculo['descricao'])): ?>
@@ -41,10 +49,14 @@ $projectUrl = preg_replace('#/public$#', '', $baseUrl);
         <p><?= nl2br(htmlspecialchars($veiculo['descricao'])) ?></p>
     <?php endif ?>
 
-    <form method="POST" action="<?= htmlspecialchars($baseUrl . '/carrinho/adicionar') ?>">
-        <input type="hidden" name="veiculo_id" value="<?= htmlspecialchars($veiculo['id']) ?>">
-        <input type="hidden" name="csrf_token" value="<?= csrf_token() ?>">
-        <button type="submit">Adicionar a lista de reservas</button>
-    </form>
+    <?php if ((int) ($veiculo['disponivel'] ?? 0) === 1): ?>
+        <form method="POST" action="<?= htmlspecialchars($baseUrl . '/carrinho/adicionar') ?>">
+            <input type="hidden" name="veiculo_id" value="<?= htmlspecialchars($veiculo['id']) ?>">
+            <input type="hidden" name="csrf_token" value="<?= csrf_token() ?>">
+            <button type="submit">Adicionar a lista de reservas</button>
+        </form>
+    <?php else: ?>
+        <p><strong>Reservado</strong></p>
+    <?php endif ?>
 </body>
 </html>

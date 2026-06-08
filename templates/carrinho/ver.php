@@ -9,20 +9,21 @@ $totalVeiculos = count($veiculos);
     <meta charset="UTF-8">
     <title><?= htmlspecialchars($titulo ?? 'Carrinho') ?></title>
     <style>
-        body { font-family: Arial, sans-serif; max-width: 1000px; margin: 0 auto; padding: 20px; color: #222; }
-        a { color: #1565C0; }
+        body { font-family: Arial, sans-serif; max-width: 1000px; margin: 0 auto; padding: 20px; color: #f5f5f5; background:#111; }
+        a { color: #ffd21f; }
+        h1 { color:#ffd21f; }
         .topo { display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-bottom: 24px; }
-        .mensagem { padding: 12px 14px; border-radius: 6px; margin-bottom: 16px; background: #e8f5e9; color: #1b5e20; }
-        .mensagem-info { background: #e3f2fd; color: #0d47a1; }
-        .vazio { padding: 24px; border: 1px solid #ddd; border-radius: 8px; background: #fafafa; }
+        .mensagem { padding: 12px 14px; border-radius: 8px; margin-bottom: 16px; background: #243b20; color: #b7f397; }
+        .mensagem-info { background: #3b300f; color: #ffd21f; }
+        .vazio { padding: 24px; border: 1px solid #333; border-radius: 12px; background: #1a1a1a; }
         .lista { display: grid; gap: 12px; }
-        .item { display: grid; grid-template-columns: 96px 1fr auto; gap: 16px; align-items: center; border: 1px solid #ddd; border-radius: 8px; padding: 12px; }
-        .item img { width: 96px; height: 64px; object-fit: cover; border-radius: 6px; background: #eee; }
-        .item h2 { margin: 0 0 6px; font-size: 1rem; color: #1A237E; }
-        .preco { margin: 0; font-weight: bold; color: #1565C0; }
-        .remover { background: #b71c1c; color: #fff; border: 0; border-radius: 4px; padding: 8px 14px; cursor: pointer; }
-        .resumo { display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-top: 24px; padding-top: 16px; border-top: 1px solid #ddd; }
-        .checkout { display: inline-block; background: #1565C0; color: #fff; text-decoration: none; border-radius: 4px; padding: 10px 16px; }
+        .item { display: grid; grid-template-columns: 96px 1fr auto; gap: 16px; align-items: center; border: 1px solid #333; border-radius: 12px; padding: 12px; background:#1a1a1a; }
+        .item img { width: 96px; height: 64px; object-fit: cover; border-radius: 14px; background: #222; }
+        .item h2 { margin: 0 0 6px; font-size: 1rem; color: #ffd21f; }
+        .preco { margin: 0; font-weight: bold; color: #ffd21f; }
+        .remover { background: #2a2a2a; color: #ffd21f; border: 1px solid #ffd21f; border-radius: 8px; padding: 8px 14px; cursor: pointer; }
+        .resumo { display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-top: 24px; padding-top: 16px; border-top: 1px solid #333; }
+        .checkout { display: inline-block; background: #ffd21f; color: #111; text-decoration: none; border-radius: 8px; padding: 10px 16px; font-weight:bold; }
 
         @media (max-width: 640px) {
             .topo, .resumo { align-items: flex-start; flex-direction: column; }
@@ -58,8 +59,14 @@ $totalVeiculos = count($veiculos);
     <?php else: ?>
         <div class="lista">
             <?php foreach ($veiculos as $v): ?>
+                <?php
+                $imagem = $v['imagem'] ?? '';
+                $imagemSrc = $imagem !== ''
+                    ? (filter_var($imagem, FILTER_VALIDATE_URL) ? $imagem : $projectUrl . '/uploads/' . $imagem)
+                    : $baseUrl . '/img/placeholder.png';
+                ?>
                 <article class="item">
-                    <img src="<?= !empty($v['imagem']) ? htmlspecialchars($projectUrl . '/uploads/' . $v['imagem']) : htmlspecialchars($baseUrl . '/img/placeholder.png') ?>"
+                    <img src="<?= htmlspecialchars($imagemSrc) ?>"
                          alt="<?= htmlspecialchars($v['marca'] . ' ' . $v['modelo']) ?>">
 
                     <div>
