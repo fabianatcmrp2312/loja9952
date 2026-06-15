@@ -76,4 +76,39 @@ class AuthController {
     private function baseUrl(): string {
         return rtrim(dirname($_SERVER['SCRIPT_NAME'] ?? ''), '/');
     }
+    public function adminLogin(): void {
+        $erro = '';
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            csrf_validar();
+            $email = trim($_POST['email'] ?? '');
+            $pass  = $_POST['password'] ?? '';
+    
+            $pdo  = \App\Database::getConnection();
+            $stmt = $pdo->prepare('SELECT * FROM admins WHERE email = :email');
+            $stmt->execute([':email' => $email]);
+            $admin = $stmt->fetch();
+    
+            if ($admin && password_verify($pass, $admin['password'])) {
+                session_regenerate_id(true);
+                $_SESSION['admin_logado'] = true;
+                $_SESSION['admin_id']     = $admin['id'];
+                $_SESSION['admin_nome']   = $admin['nome'];
+                header('Location: /admin');
+                exit;
+            }
+            $erro = 'Credenciais inválidas.';
+        }
+        $titulo = 'Administração — Login';
+        require __DIR__ . '/../../templates/admin/login.php';
+    }
+    
+    // Middleware de proteção para o backoffice:
+    public static function verificarAdmin(): void {
+        if (session_status() === PHP_SESSION_NONE) session_start();
+        if (!($_SESSION['admin_logado'] ?? false)) {
+            header('Location: /admin/login');
+            exit;
+        }
+    }
+
 }

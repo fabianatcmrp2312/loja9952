@@ -63,4 +63,11 @@ match ("$recurso/$acao") {
     'logout/' => (new AuthController())->logout(),
     'conta/' => (new ContaController())->ver(),
     default => (new VeiculoController())->catalogo(),
+    'admin/'              => (new AdminController())->dashboard(),
+    'admin/login'         => (new AuthController())->adminLogin(),
+    'admin/veiculos'      => (new AdminController())->veiculosLista(),
+    'admin/veiculos/criar'=> (new AdminController())->veiculoCriar(),
+    'admin/reservas'      => (new AdminController())->reservasLista(),
+    'admin/reservas/estado'=> (new AdminController())->reservaEstado(),
+
 };
