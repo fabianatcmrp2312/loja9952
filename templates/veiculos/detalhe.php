@@ -1,10 +1,12 @@
 <?php
 $baseUrl = rtrim(dirname($_SERVER['SCRIPT_NAME'] ?? ''), '/');
+$baseUrl = preg_replace('#/public$#', '', $baseUrl) ?: '';
 $projectUrl = preg_replace('#/public$#', '', $baseUrl);
 $imagem = $veiculo['imagem'] ?? '';
 $imagemSrc = $imagem !== ''
-    ? (filter_var($imagem, FILTER_VALIDATE_URL) ? $imagem : $projectUrl . '/uploads/' . $imagem)
+    ? (filter_var($imagem, FILTER_VALIDATE_URL) ? $imagem : $projectUrl . '/public/uploads/' . $imagem)
     : $baseUrl . '/img/placeholder.png';
+$disponivel = (int) ($veiculo['disponivel'] ?? 0) === 1;
 ?>
 <!DOCTYPE html>
 <html lang="pt">
@@ -41,7 +43,7 @@ $imagemSrc = $imagem !== ''
         <tr><th>Cilindrada</th><td><?= htmlspecialchars($veiculo['cilindrada']) ?></td></tr>
         <?php endif ?>
         <tr><th>Preco</th><td><strong><?= number_format((float) $veiculo['preco'], 2, ',', '.') ?> EUR</strong></td></tr>
-        <tr><th>Estado</th><td><strong><?= ((int) ($veiculo['disponivel'] ?? 0) === 1) ? 'Disponivel' : 'Reservado' ?></strong></td></tr>
+        <tr><th>Estado</th><td><span class="badge <?= $disponivel ? 'success' : 'danger' ?>"><?= $disponivel ? 'Disponivel' : 'Reservado' ?></span></td></tr>
     </table>
 
     <?php if (!empty($veiculo['descricao'])): ?>
@@ -49,14 +51,14 @@ $imagemSrc = $imagem !== ''
         <p><?= nl2br(htmlspecialchars($veiculo['descricao'])) ?></p>
     <?php endif ?>
 
-    <?php if ((int) ($veiculo['disponivel'] ?? 0) === 1): ?>
+    <?php if ($disponivel): ?>
         <form method="POST" action="<?= htmlspecialchars($baseUrl . '/carrinho/adicionar') ?>">
             <input type="hidden" name="veiculo_id" value="<?= htmlspecialchars($veiculo['id']) ?>">
             <input type="hidden" name="csrf_token" value="<?= csrf_token() ?>">
             <button type="submit">Adicionar a lista de reservas</button>
         </form>
     <?php else: ?>
-        <p><strong>Reservado</strong></p>
+        <p><span class="badge danger">Reservado</span></p>
     <?php endif ?>
 </body>
 </html>

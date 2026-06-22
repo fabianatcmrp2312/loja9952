@@ -1,5 +1,7 @@
 <?php
 $baseUrl = rtrim(dirname($_SERVER['SCRIPT_NAME'] ?? ''), '/');
+$baseUrl = preg_replace('#/public$#', '', $baseUrl) ?: '';
+$clientEmailDemo = $_ENV['CLIENT_EMAIL'] ?? 'cliente@autoshop.pt';
 ?>
 <!DOCTYPE html>
 <html lang="pt">
@@ -16,6 +18,7 @@ $baseUrl = rtrim(dirname($_SERVER['SCRIPT_NAME'] ?? ''), '/');
         button { background: #ffd21f; color: #111; border: 0; border-radius: 8px; padding: 10px 16px; cursor: pointer; font-weight:bold; }
         .erro { color: #ff8a80; margin-bottom: 16px; }
         .mensagem { color: #b7f397; margin-bottom: 16px; }
+        .hint { color: #aab4d6; margin: -6px 0 16px; font-size: .95rem; }
         a { color: #ffd21f; }
     </style>
 </head>
@@ -34,12 +37,14 @@ $baseUrl = rtrim(dirname($_SERVER['SCRIPT_NAME'] ?? ''), '/');
             <p class="erro"><?= htmlspecialchars($erro) ?></p>
         <?php endif ?>
 
+        <p class="hint">Conta de cliente de teste: <strong><?= htmlspecialchars($clientEmailDemo) ?></strong> | Password: <strong>Cliente123!</strong></p>
+
         <form method="POST" action="<?= htmlspecialchars($baseUrl . '/login') ?>">
             <input type="hidden" name="csrf_token" value="<?= csrf_token() ?>">
 
             <div class="campo">
                 <label for="email">Email</label>
-                <input id="email" type="email" name="email" value="<?= htmlspecialchars($_POST['email'] ?? '') ?>" required>
+                <input id="email" type="email" name="email" value="<?= htmlspecialchars($clientEmailDemo) ?>" autocomplete="off" required>
             </div>
 
             <div class="campo">

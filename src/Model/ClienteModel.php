@@ -9,6 +9,21 @@ class ClienteModel {
  
     public function __construct() {
         $this->db = Database::getConnection();
+        $this->garantirTabela();
+    }
+
+    private function garantirTabela(): void
+    {
+        $this->db->exec(
+            'CREATE TABLE IF NOT EXISTS clientes (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                nome VARCHAR(120) NOT NULL,
+                email VARCHAR(190) NOT NULL UNIQUE,
+                telefone VARCHAR(30) NULL,
+                password VARCHAR(255) NOT NULL,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4'
+        );
     }
  
     public function criar(array $dados): int {

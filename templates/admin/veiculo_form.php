@@ -4,6 +4,7 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 
 $baseUrl = $baseUrl ?? rtrim(dirname($_SERVER['SCRIPT_NAME'] ?? ''), '/');
+$baseUrl = preg_replace('#/public$#', '', $baseUrl) ?: '';
 $marcas = $marcas ?? [];
 $veiculo = $veiculo ?? [];
 $erros = $erros ?? [];
@@ -53,7 +54,7 @@ $valor = static fn(string $chave, mixed $default = '') => htmlspecialchars((stri
             </div>
         <?php endif; ?>
 
-        <form method="post" enctype="multipart/form-data" action="<?= htmlspecialchars($baseUrl . '/admin/veiculos/' . ($modo === 'editar' ? 'editar' : 'novo')) ?>">
+        <form method="post" enctype="multipart/form-data" action="<?= htmlspecialchars($baseUrl . '/admin/veiculos/' . ($modo === 'editar' ? 'editar/' . (int) ($veiculo['id'] ?? 0) : 'criar')) ?>">
             <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(csrf_token()) ?>">
             <?php if (!empty($veiculo['id'])): ?>
                 <input type="hidden" name="id" value="<?= htmlspecialchars((string) $veiculo['id']) ?>">
@@ -105,7 +106,7 @@ $valor = static fn(string $chave, mixed $default = '') => htmlspecialchars((stri
                     <input id="imagem" name="imagem" type="file" accept="image/jpeg,image/png,image/webp">
                     <?php if (!empty($veiculo['imagem'])): ?>
                         <div class="preview">
-                            <img src="<?= htmlspecialchars($baseUrl . '/uploads/' . $veiculo['imagem']) ?>" alt="Imagem atual">
+                            <img src="<?= htmlspecialchars($baseUrl . '/public/uploads/' . $veiculo['imagem']) ?>" alt="Imagem atual">
                             <span class="muted">Imagem atual: <?= htmlspecialchars($veiculo['imagem']) ?></span>
                         </div>
                     <?php endif; ?>

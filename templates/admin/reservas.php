@@ -4,6 +4,7 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 
 $baseUrl = $baseUrl ?? rtrim(dirname($_SERVER['SCRIPT_NAME'] ?? ''), '/');
+$baseUrl = preg_replace('#/public$#', '', $baseUrl) ?: '';
 $reservas = $reservas ?? [];
 $estados = [
     'pendente' => 'Pendente',
@@ -32,6 +33,10 @@ $estados = [
         select, button { font:inherit; }
         select { padding:10px 12px; border-radius:10px; border:1px solid #cbd5e1; background:#fff; }
         button { margin-top:8px; padding:9px 12px; border:none; border-radius:10px; background:#182033; color:#fff; font-weight:700; cursor:pointer; }
+        .badge { display:inline-flex; align-items:center; padding:5px 9px; border-radius:999px; font-size:.85rem; font-weight:700; }
+        .badge.pendente { background:rgba(245,158,11,.14); color:#b45309; }
+        .badge.confirmada { background:rgba(46,125,50,.12); color:#2e7d32; }
+        .badge.cancelada { background:rgba(198,40,40,.12); color:#c62828; }
         .empty { padding:28px; color:#52607a; }
         .cliente { font-weight:700; }
         .sub { display:block; color:#52607a; font-size:.92rem; margin-top:4px; }
@@ -83,10 +88,14 @@ $estados = [
                                 <?= htmlspecialchars(trim(($reserva['marca'] ?? '') . ' ' . ($reserva['modelo'] ?? ''))) ?><br>
                                 <span class="sub"><?= htmlspecialchars((string) ($reserva['ano'] ?? '')) ?> | <?= number_format((float) ($reserva['preco'] ?? 0), 2, ',', '.') ?> EUR</span>
                             </td>
-                            <td data-label="Estado" class="estado"><?= htmlspecialchars($estados[$estadoAtual] ?? ucfirst($estadoAtual)) ?></td>
+                            <td data-label="Estado">
+                                <span class="badge <?= htmlspecialchars($estadoAtual) ?>">
+                                    <?= htmlspecialchars($estados[$estadoAtual] ?? ucfirst($estadoAtual)) ?>
+                                </span>
+                            </td>
                             <td data-label="Data"><?= htmlspecialchars((string) ($reserva['criado_em'] ?? '')) ?></td>
                             <td data-label="Mudar estado">
-                                <form method="post" action="<?= htmlspecialchars($baseUrl . '/admin/reserva/estado') ?>">
+                                <form method="post" action="<?= htmlspecialchars($baseUrl . '/admin/reservas/estado') ?>">
                                     <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(csrf_token()) ?>">
                                     <input type="hidden" name="reserva_id" value="<?= htmlspecialchars((string) ($reserva['id'] ?? 0)) ?>">
                                     <select name="estado">

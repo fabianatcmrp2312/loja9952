@@ -1,5 +1,6 @@
 <?php
 $baseUrl = rtrim(dirname($_SERVER['SCRIPT_NAME'] ?? ''), '/');
+$baseUrl = preg_replace('#/public$#', '', $baseUrl) ?: '';
 $totalVeiculos = count($veiculos ?? []);
 ?>
 <!DOCTYPE html>
@@ -40,7 +41,7 @@ $totalVeiculos = count($veiculos ?? []);
     </div>
 
     <form method="POST" action="<?= htmlspecialchars($baseUrl . '/checkout/confirmar') ?>">
-        <input type="hidden" name="csrf_token" value="<?= csrf_token() ?>">
+        <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(csrf_token()) ?>">
 
         <div class="lista">
             <?php foreach (($veiculos ?? []) as $v): ?>

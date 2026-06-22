@@ -1,5 +1,6 @@
 <?php
 $baseUrl = rtrim(dirname($_SERVER['SCRIPT_NAME'] ?? ''), '/');
+$baseUrl = preg_replace('#/public$#', '', $baseUrl) ?: '';
 $projectUrl = preg_replace('#/public$#', '', $baseUrl);
 $totalVeiculos = count($veiculos);
 ?>
@@ -62,7 +63,7 @@ $totalVeiculos = count($veiculos);
                 <?php
                 $imagem = $v['imagem'] ?? '';
                 $imagemSrc = $imagem !== ''
-                    ? (filter_var($imagem, FILTER_VALIDATE_URL) ? $imagem : $projectUrl . '/uploads/' . $imagem)
+                    ? (filter_var($imagem, FILTER_VALIDATE_URL) ? $imagem : $projectUrl . '/public/uploads/' . $imagem)
                     : $baseUrl . '/img/placeholder.png';
                 ?>
                 <article class="item">

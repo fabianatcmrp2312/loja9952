@@ -4,6 +4,7 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 
 $baseUrl = $baseUrl ?? rtrim(dirname($_SERVER['SCRIPT_NAME'] ?? ''), '/');
+$baseUrl = preg_replace('#/public$#', '', $baseUrl) ?: '';
 $veiculos = $veiculos ?? [];
 ?>
 <!DOCTYPE html>
@@ -17,10 +18,13 @@ $veiculos = $veiculos ?? [];
         main { max-width:1200px; margin:0 auto; padding:32px 20px 48px; }
         .topbar { display:flex; justify-content:space-between; gap:16px; align-items:center; flex-wrap:wrap; margin-bottom:18px; }
         .topbar h1 { margin:0; }
-        .btn, .btn-ghost, .btn-danger { display:inline-flex; align-items:center; justify-content:center; gap:6px; padding:10px 14px; border-radius:10px; text-decoration:none; border:1px solid transparent; font-weight:700; }
+        .btn, .btn-ghost, .btn-danger { display:inline-flex; align-items:center; justify-content:center; gap:6px; padding:10px 14px; border-radius:10px; text-decoration:none; border:1px solid transparent; font-weight:700; cursor:pointer; }
         .btn { background:#182033; color:#fff; }
         .btn-ghost { background:#fff; color:#182033; border-color:#cbd5e1; }
         .btn-danger { background:#c0392b; color:#fff; }
+        .badge { display:inline-flex; align-items:center; padding:5px 9px; border-radius:999px; font-size:.85rem; font-weight:700; }
+        .badge.success { background:rgba(46,125,50,.12); color:#2e7d32; }
+        .badge.danger { background:rgba(198,40,40,.12); color:#c62828; }
         .panel { background:#fff; border:1px solid #dbe3f0; border-radius:18px; overflow:hidden; box-shadow:0 10px 28px rgba(24,32,51,.08); }
         table { width:100%; border-collapse:collapse; }
         th, td { padding:14px 12px; text-align:left; vertical-align:top; border-bottom:1px solid #eef2f7; }
@@ -46,7 +50,7 @@ $veiculos = $veiculos ?? [];
             <h1>Veículos</h1>
             <p class="muted">Lista completa do inventário com ações rápidas de gestão.</p>
         </div>
-        <a class="btn" href="<?= htmlspecialchars($baseUrl . '/admin/veiculos/novo') ?>">+ Adicionar novo</a>
+        <a class="btn" href="<?= htmlspecialchars($baseUrl . '/admin/veiculos/criar') ?>">+ Adicionar novo</a>
     </div>
 
     <section class="panel">
@@ -67,7 +71,7 @@ $veiculos = $veiculos ?? [];
                 <tbody>
                     <?php foreach ($veiculos as $veiculo): ?>
                         <?php
-                        $imagem = !empty($veiculo['imagem']) ? $baseUrl . '/uploads/' . $veiculo['imagem'] : '';
+                        $imagem = !empty($veiculo['imagem']) ? $baseUrl . '/public/uploads/' . $veiculo['imagem'] : '';
                         $tituloVeiculo = trim(($veiculo['marca'] ?? '') . ' ' . ($veiculo['modelo'] ?? ''));
                         $disponivel = (int) ($veiculo['disponivel'] ?? 0) === 1;
                         ?>
@@ -85,11 +89,18 @@ $veiculos = $veiculos ?? [];
                             </td>
                             <td data-label="Ano"><?= htmlspecialchars((string) ($veiculo['ano'] ?? '')) ?></td>
                             <td data-label="Preço"><?= number_format((float) ($veiculo['preco'] ?? 0), 2, ',', '.') ?> EUR</td>
-                            <td data-label="Estado"><?= $disponivel ? 'Disponível' : 'Reservado' ?></td>
+                            <td data-label="Estado">
+                                <span class="badge <?= $disponivel ? 'success' : 'danger' ?>">
+                                    <?= $disponivel ? 'Disponível' : 'Reservado' ?>
+                                </span>
+                            </td>
                             <td data-label="Ações">
                                 <div class="actions">
                                     <a class="btn-ghost" href="<?= htmlspecialchars($baseUrl . '/admin/veiculos/editar/' . (int) ($veiculo['id'] ?? 0)) ?>">Editar</a>
-                                    <a class="btn-danger" href="<?= htmlspecialchars($baseUrl . '/admin/veiculos/apagar/' . (int) ($veiculo['id'] ?? 0)) ?>">Apagar</a>
+                                    <form method="post" action="<?= htmlspecialchars($baseUrl . '/admin/veiculos/apagar/' . (int) ($veiculo['id'] ?? 0)) ?>" onsubmit="return confirm('Tem a certeza que deseja apagar este veículo?');">
+                                        <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(csrf_token()) ?>">
+                                        <button class="btn-danger" type="submit">Apagar</button>
+                                    </form>
                                 </div>
                             </td>
                         </tr>

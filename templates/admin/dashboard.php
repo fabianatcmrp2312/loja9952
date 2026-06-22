@@ -4,6 +4,7 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 
 $baseUrl = $baseUrl ?? rtrim(dirname($_SERVER['SCRIPT_NAME'] ?? ''), '/');
+$baseUrl = preg_replace('#/public$#', '', $baseUrl) ?: '';
 $totalVeic = (int) ($totalVeic ?? 0);
 $totalRes = (int) ($totalRes ?? 0);
 $pendentes = (int) ($pendentes ?? 0);
@@ -67,7 +68,7 @@ $pendentes = (int) ($pendentes ?? 0);
                 Gerir veículos
                 <small>Ver, editar e apagar anúncios.</small>
             </a>
-            <a class="link" href="<?= htmlspecialchars($baseUrl . '/admin/veiculos/novo') ?>">
+            <a class="link" href="<?= htmlspecialchars($baseUrl . '/admin/veiculos/criar') ?>">
                 Adicionar veículo
                 <small>Criar um novo registo com imagem.</small>
             </a>
